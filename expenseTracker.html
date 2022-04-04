@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        * {
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+        }
+        body {
+            font-size: 1vw;
+            background-color: whitesmoke;
+        }
+        #forms {
+            margin: auto;
+            justify-items: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+            margin-top: 15vh;
+            text-align: center;
+           
+            width: 20vw;
+            margin: auto;
+            background-color: white;
+        }
+        #box {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1vw;
+            line-height: 4vh;
+           
+            margin: 5vh 10vw 2vh 10vw;
+        }
+        h1{
+            text-align: center;
+            text-decoration: underline;
+            color: rgb(9, 9, 160);
+            margin: auto;
+            font-size: 2vw;
+            margin-bottom: 40px;
+        }
+        #months_name, input{
+            width: 18vw;
+            margin: auto;
+            padding: 1vh;
+        }
+        button{
+            padding: 1vh;
+            width: 18vw;
+            background-color: blue;
+            color: whitesmoke;
+            text-align: center;
+            border-radius: 1vw;
+            margin-top: 2vh;
+            margin-bottom: 2vh;
+        }
+        .container p{
+            text-align: left;
+            padding: 1vh;
+        }
+        #box >div{
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+           
+            text-align: left;
+            padding: 2vh;
+        }
+        .blue{
+            color: blue;
+            font-weight: 900;
+            font-size: 1.5vw;
+        }
+        .green{
+            color: green;
+        }
+    </style>
+</head>
+<body onload=" show()">
+    <h1>EXPENSE TRACKER</h1>
+    <div class="container">
+        <form id="forms" onsubmit="tracker()">
+            <p>Select Month</p>
+            <select name="months" id="months_name">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+            <p>Income</p>
+            <input type="number" name="income">
+            <p>Expense</p>
+            <input type="number" name="expense">
+            <br />
+            <button onsubmit="tracker()">Submit</button>
+        </form>
+    </div>
+        <div id="box"></div>
+        <script>
+            var tracker = () => {
+                event.preventDefault();
+                var expense_tracker = localStorage.getItem("expense_tracker")
+                if (expense_tracker === null) {
+                    localStorage.setItem("expense_tracker", "[]")
+                }
+                var form = document.querySelector("#forms")
+                var month = form["months"].value
+                var income = form['income'].value
+                var expense = form["expense"].value
+                var data = {
+                    month,
+                    income,
+                    expense
+                }
+                console.log(data)
+                var arr = JSON.parse(localStorage.getItem("expense_tracker"))
+                arr.push(data)
+                console.log(arr)
+                localStorage.setItem("expense_tracker", JSON.stringify(arr))
+                show()
+            }
+            var box = document.querySelector("#box")
+            var show = () => {
+                box.innerHTML = null
+                let arr = JSON.parse(localStorage.getItem("expense_tracker"))
+                arr.forEach((ele) => {
+                    var div = document.createElement("div")
+                    let month = document.createElement("p")
+                    month.innerText = ele.month
+                    month.setAttribute("class","blue")
+                    let income = document.createElement("p")
+                    income.innerText = `Your income is Rs ${ele.income}/-`
+                    income.setAttribute("class","green")
+                    let expense = document.createElement("p")
+                    expense.innerText = `Your expense is Rs ${ele.expense}/-`
+                    let saving = ele.income - ele.expense
+                    let save = document.createElement("p")
+                    save.innerText = `Your Savings are Rs ${saving}/-`
+                    save.setAttribute("class","green")
+                    div.append(month, income, expense, save)
+                    box.append(div)
+                });
+            }
+        </script>
+</body>
+</html>
